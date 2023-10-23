@@ -1,0 +1,3 @@
+logboek:
+
+23/11/23: begonnen met het op starten van het project/git repo en en research doen naar shader coding in HLSL
