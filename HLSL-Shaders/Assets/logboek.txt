@@ -1,3 +1,6 @@
 logboek:
 
 23/11/23: begonnen met het op starten van het project/git repo en en research doen naar shader coding in HLSL
+
+24/11/23: heb visalusatie van een matrice gemaakt en heb er een scale transform en poisition transform 
+
