@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScaleTransformation : MonoBehaviour
+public class ScaleTransformation : Transformation
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Vector3 scale;
 
-    // Update is called once per frame
-    void Update()
+    public override Vector3 Apply(Vector3 point)
     {
-        
+        point.x *= scale.x;
+        point.y *= scale.y;
+        point.z *= scale.z;
+        return point;
     }
 }
