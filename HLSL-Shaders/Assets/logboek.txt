@@ -1,6 +1,11 @@
 logboek:
 
-23/11/23: begonnen met het op starten van het project/git repo en en research doen naar shader coding in HLSL
+mtrice ben ik aan het copderen in c#
 
-24/11/23: heb visalusatie van een matrice gemaakt en heb er een scale transform en poisition transform 
+23/10/23: begonnen met het op starten van het project/git repo en en research doen naar shader coding in HLSL
 
+24/10/23: heb visalusatie van een matrice gemaakt en heb er een scale transform en poisition transform
+
+25/10/23: heb aan de matrice een rotation transform gemaakt maar er zit nu een null reference
+
+research link: https://catlikecoding.com/unity/tutorials/rendering/part-1/

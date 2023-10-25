@@ -362,6 +362,7 @@
 -analyzer:"D:/unity/2022.3.4f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"D:/unity/2022.3.4f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Scripts/PositionTranformation.cs"
+"Assets/Scripts/RotationTransformation.cs"
 "Assets/Scripts/ScaleTransformation.cs"
 "Assets/Scripts/Transformation.cs"
 "Assets/Scripts/TransformationGrid.cs"
