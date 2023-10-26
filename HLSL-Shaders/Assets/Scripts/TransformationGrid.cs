@@ -27,6 +27,21 @@ public class TransformationGrid : MonoBehaviour
         transformations = new List<Transformation>();
     }
 
+    void Update()
+    {
+        GetComponents<Transformation>(transformations);
+        for (int i = 0, z = 0; z < gridResolution; z++)
+        {
+            for (int y = 0; y < gridResolution; y++)
+            {
+                for (int x = 0; x < gridResolution; x++, i++)
+                {
+                    grid[i].localPosition = TransformPoint(x, y, z);
+                }
+            }
+        }
+    }
+
     void UpdateTransformation()
     {
         GetComponents<Transformation>(transformations);
