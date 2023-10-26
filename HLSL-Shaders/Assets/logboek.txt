@@ -1,6 +1,6 @@
 logboek:
 
- ik ben een matrice aan het coderen in c#
+ ik ben een matrice aan het coderen in c#: https://catlikecoding.com/unity/tutorials/rendering/part-1/
 
 23/10/23: begonnen met het op starten van het project/git repo en en research doen naar shader coding in HLSL
 
@@ -10,7 +10,9 @@ logboek:
 
 26/10/23: heb een camera transform voor orthographic view de null reference is niet op gelost nog en kan op het moment niet vinden wat het probleem is
 
-link: https://catlikecoding.com/unity/tutorials/rendering/part-1/ 
+26/10/23: heb een nieuwe scene aan gemaakt en begonnen met shader coding in HLSL
+
+link: https://catlikecoding.com/unity/tutorials/rendering/
 deze tutorial is in 20 delen verdeeld en heeft ook nog een advanced tutorial voor rendering dat 7 delen heeft waar onder de depth of field waar mee ik heb gewerkt voor het HLO
 deze link gebruik ik om meer te leren over rendering en hoe je met shaders kan werken.
 talen die gebruikt worden zijn C# en HLSL.
