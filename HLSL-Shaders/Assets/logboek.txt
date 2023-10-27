@@ -11,7 +11,6 @@ logboek:
 26/10/23: heb een camera transform voor orthographic view de null reference is niet op gelost nog en kan op het moment niet vinden wat het probleem is
 
 https://catlikecoding.com/unity/tutorials/rendering/part-2/
-https://catlikecoding.com/unity/tutorials/rendering/part-3/
 26/10/23: heb een nieuwe scene aan gemaakt en begonnen met shader coding in HLSL
 
 27/10/23: met de HLSL code heb ik nu een custom material gemaakt die werkt
