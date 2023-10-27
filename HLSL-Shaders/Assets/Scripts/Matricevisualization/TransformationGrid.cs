@@ -29,7 +29,7 @@ public class TransformationGrid : MonoBehaviour
 
     void Update()
     {
-        GetComponents<Transformation>(transformations);
+        GetComponents(transformations);
         for (int i = 0, z = 0; z < gridResolution; z++)
         {
             for (int y = 0; y < gridResolution; y++)
@@ -44,7 +44,7 @@ public class TransformationGrid : MonoBehaviour
 
     void UpdateTransformation()
     {
-        GetComponents<Transformation>(transformations);
+        GetComponents(transformations);
         if (transformations.Count > 0)
         {
             transformation = transformations[0].Matrix;
