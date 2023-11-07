@@ -23,13 +23,14 @@ Shader "Custom/FirstShader"
                 sampler2D _MainTex;
                 float4 _MainTex_ST;
 
-                struct Interpolators {
-                    float4 position : SV_POSITION;
-                    float2 uv : TEXCOORD0;
-                };
 
                 struct VertexData {
                     float4 position : POSITION;
+                    float2 uv : TEXCOORD0;
+                };
+
+                struct Interpolators {
+                    float4 position : SV_POSITION;
                     float2 uv : TEXCOORD0;
                 };
 

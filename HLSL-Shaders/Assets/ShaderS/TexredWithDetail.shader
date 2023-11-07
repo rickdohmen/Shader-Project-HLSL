@@ -24,15 +24,15 @@ Shader "Custom/Textured with Detail"
                 sampler2D _MainTex, _DetailTex;
                 float4 _MainTex_ST, _DetailTex_ST;
 
+                struct VertexData {
+                    float4 position : POSITION;
+                    float2 uv : TEXCOORD0;
+                };
+
                 struct Interpolators {
                     float4 position : SV_POSITION;
                     float2 uv : TEXCOORD0;
                     float2 uvDetail : TEXCOORD1;
-                };
-
-                struct VertexData {
-                    float4 position : POSITION;
-                    float2 uv : TEXCOORD0;
                 };
 
                 Interpolators MyVertexProgram(VertexData v) {
