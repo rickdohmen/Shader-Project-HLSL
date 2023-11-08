@@ -1,0 +1,5 @@
+logboek 6 t/m 10 novmber:
+
+07/11/23 shader script TexturedSplatting toegevoegd en heb er een custom material dat gemaakt dat textures combined op een gameobject.
+
+08/11/23 shader script firstlightingshader toegevoegd en ben er mee aan het oefenen om licht in val in shaders te customisen hiervoor heb ik ook weer een nieuwe material lightingshader aan gemaakt.
