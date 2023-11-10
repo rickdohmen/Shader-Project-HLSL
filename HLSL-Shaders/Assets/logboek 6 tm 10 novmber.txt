@@ -5,3 +5,5 @@ logboek 6 t/m 10 novmber:
 08/11/23 shader script firstlightingshader toegevoegd en ben er mee aan het oefenen om licht in val in shaders te customisen hiervoor heb ik ook weer een nieuwe material lightingshader aan gemaakt ook zit er een error op line 60 (float3 diffuse = albedo * lightColor * DotClamped(lightDir, i.normal);).
 
 09/11/23 bezig met de error fixen maar tot nu toe geen geluk daar in.
+
+10/11/23 heb op een manier de error weg gehaald, heb daarna nieuwe functies in de FirstLightShader script gemaakt maar de shader werkt niet terwijl het geen errors heeft.
