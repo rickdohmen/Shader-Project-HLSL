@@ -11,12 +11,12 @@ Shader "Custom/First Lighting Shader"
     }
 
         SubShader
-    {
-        Pass
         {
-            Tags{
-                "LightMode" = "ForwardBase"
-            }
+            Pass
+            {
+                Tags{
+                    "LightMode" = "ForwardBase"
+                }
                 CGPROGRAM
                 
                 #pragma target 3.0
@@ -26,12 +26,14 @@ Shader "Custom/First Lighting Shader"
 
                 
                 #include "UnityPBSLighting.cginc"
-
+                
+                CBUFFER_START(UnityPerMaterial)
                 float4 _Tint;
                 sampler2D _MainTex;
                 float4 _MainTex_ST;
                 float4 _Metallic;
                 float _Smoothness;
+                CBUFFER_END
 
                 struct VertexData {
                     float4 position : POSITION;
@@ -79,6 +81,6 @@ Shader "Custom/First Lighting Shader"
                 }
 
                 ENDCG
+            }
         }
-    }
 }
