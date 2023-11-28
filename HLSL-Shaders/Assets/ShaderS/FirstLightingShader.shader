@@ -17,7 +17,7 @@ Shader "Custom/First Lighting Shader"
                 Tags{
                     "LightMode" = "ForwardBase"
                 }
-                HLSLPROGRAM
+                CGPROGRAM
                 
                 #pragma target 3.0
 
@@ -81,7 +81,7 @@ Shader "Custom/First Lighting Shader"
                     return UNITY_BRDF_PBS(albedo, specularTint, oneMinusReflectivity, _Smoothness, i.normal, viewDir, light, indirectLight);
                 }
 
-                ENDHLSL
+                ENDCG
             }
         }
 }
