@@ -32,7 +32,7 @@ Shader "Custom/First Lighting Shader"
                 CBUFFER_START(UnityPerMaterial)
                 float4 _Tint;
                 float4 _MainTex_ST;
-                float4 _Metallic;
+                float _Metallic;
                 float _Smoothness;
                 CBUFFER_END
 
