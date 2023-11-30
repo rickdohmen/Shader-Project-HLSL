@@ -52,6 +52,7 @@ Shader "Custom/First Lighting Shader"
                 Interpolators MyVertexProgram(VertexData v) {
                     Interpolators i;
                     i.position = UnityObjectToClipPos(v.position);
+                    i.normal = UnityObjectToWorldNormal(v.normal);
                     i.worldPos = mul(unity_ObjectToWorld, v.position);
                     i.uv = TRANSFORM_TEX(v.uv, _MainTex);
                     i.normal = mul(transpose((float3x3)unity_WorldToObject), v.normal);
