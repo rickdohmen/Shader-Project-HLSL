@@ -14,9 +14,7 @@ Shader "Custom/First Lighting Shader"
         {
             Pass
             {
-                Tags{
-                    "LightMode" = "ForwardBase"
-                }
+                
                 CGPROGRAM
                 
                 #pragma target 3.0
