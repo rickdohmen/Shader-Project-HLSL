@@ -12,7 +12,8 @@ Shader "Custom/FirstLightingShader2"
         {
             Tags
             {
-               "LightMode" = "ForwardBase"
+               "LightMode" = "Meta" 
+               "PassFlags" = "OnlyDirectional"
             }
                 CGPROGRAM
 
