@@ -14,10 +14,6 @@ Shader "Custom/First Lighting Shader"
         {
             Pass
             {
-                Tags
-                {
-                    "LightMode" = "ForwardBase" 
-                }
                 CGPROGRAM
                 
                 #pragma target 3.0
@@ -53,11 +49,10 @@ Shader "Custom/First Lighting Shader"
                 Interpolators MyVertexProgram(VertexData v) {
                     Interpolators i;
                     i.position = UnityObjectToClipPos(v.position);
+                    i.normal = normalize(i.normal);
                     i.normal = UnityObjectToWorldNormal(v.normal);
                     i.worldPos = mul(unity_ObjectToWorld, v.position);
                     i.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                    i.normal = mul(transpose((float3x3)unity_WorldToObject), v.normal);
-                    i.normal = normalize(i.normal);
                     return i;
                 }
 
