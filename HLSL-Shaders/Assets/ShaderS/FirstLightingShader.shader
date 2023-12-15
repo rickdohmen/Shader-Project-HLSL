@@ -14,9 +14,6 @@ Shader"Custom/First Lighting Shader"
         {
             Pass
             {
-                
-                Blend One One
-                ZWrite off
 
                 CGPROGRAM
                 
@@ -33,7 +30,8 @@ Shader"Custom/First Lighting Shader"
             
             Pass
             {
-                
+                Blend One One
+                ZWrite off
                 
                 CGPROGRAM
                 
@@ -41,6 +39,8 @@ Shader"Custom/First Lighting Shader"
 
                 #pragma vertex MyVertexProgram
                 #pragma fragment MyFragmentProgram
+
+                #define POINT
 
                 #include "My Lighting.cginc"
 
