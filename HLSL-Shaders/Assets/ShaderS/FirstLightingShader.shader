@@ -19,6 +19,8 @@ Shader"Custom/First Lighting Shader"
                 
                 #pragma target 3.0
 
+                #pragma multi_compile _ VERTEXLIGHT_ON
+
                 #pragma vertex MyVertexProgram
                 #pragma fragment MyFragmentProgram
 
@@ -39,8 +41,8 @@ Shader"Custom/First Lighting Shader"
 
                 #pragma vertex MyVertexProgram
                 #pragma fragment MyFragmentProgram
-
-                #define POINT
+                #pragma multi_compile fwdadd
+                
 
                 #include "My Lighting.cginc"
 
