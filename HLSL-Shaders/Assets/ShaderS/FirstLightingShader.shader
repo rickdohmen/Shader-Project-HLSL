@@ -24,6 +24,8 @@ Shader"Custom/First Lighting Shader"
                 #pragma vertex MyVertexProgram
                 #pragma fragment MyFragmentProgram
 
+                #pragma FORWARD_BASE_PASS
+
                 #include "My Lighting.cginc"
 
                 
