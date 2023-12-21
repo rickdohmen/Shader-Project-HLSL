@@ -2,54 +2,95 @@
 
 Shader"Custom/First Lighting Shader"
 {
-    Properties
-    {
-        _Tint("Tint", Color) = (1, 1, 1, 1)
-        _MainTex("Albedo", 2D) = "White" {}
-        [Gamma]_Metallic("Metallic", Range(0, 1)) = 0
-        _Smoothness("Smoothness", Range(0,1)) = 0.5
-    }
+    Properties {
+		_Tint ("Tint", Color) = (1, 1, 1, 1)
+		_MainTex ("Albedo", 2D) = "white" {}
 
-        SubShader
-        {
-            Pass
-            {
+		[NoScaleOffset] _NormalMap ("Normals", 2D) = "bump" {}
+		_BumpScale ("Bump Scale", Float) = 1
 
-                CGPROGRAM
-                
-                #pragma target 3.0
+		[NoScaleOffset] _MetallicMap("Metallic", 2D) = "white" {}
+		[Gamma] _Metallic ("Metallic", Range(0, 1)) = 0
+		_Smoothness ("Smoothness", Range(0, 1)) = 0.1
 
-                #pragma multi_compile _ VERTEXLIGHT_ON
+		_DetailTex ("Detail Albedo", 2D) = "gray" {}
+		[NoScaleOffset] _DetailNormalMap ("Detail Normals", 2D) = "bump" {}
+		_DetailBumpScale ("Detail Bump Scale", Float) = 1
+	}
 
-                #pragma vertex MyVertexProgram
-                #pragma fragment MyFragmentProgram
+	CustomEditor "MyLightingShaderGUI"
+CGINCLUDE
 
-                #pragma FORWARD_BASE_PASS
+#define BINORMAL_PER_FRAGMENT
 
-                #include "My Lighting.cginc"
+	ENDCG
 
-                
-                ENDCG
-            }
-            
-            Pass
-            {
-                Blend One One
-                ZWrite off
-                
-                CGPROGRAM
-                
-                #pragma target 3.0
+	SubShader {
 
-                #pragma vertex MyVertexProgram
-                #pragma fragment MyFragmentProgram
-                #pragma multi_compile fwdadd
-                
+		Pass {
+			
 
-                #include "My Lighting.cginc"
+			CGPROGRAM
 
-                
-                ENDCG
-            }
-        }
+			#pragma target 3.0
+
+			#pragma shader_feature _METALLIC_MAP
+			#pragma shader_feature _ _SMOOTHNESS_ALBEDO _SMOOTHNESS_METALLIC
+
+			#pragma multi_compile _ VERTEXLIGHT_ON
+			#pragma multi_compile _ SHADOWS_SCREEN
+
+			#pragma vertex MyVertexProgram
+			#pragma fragment MyFragmentProgram
+
+			#define FORWARD_BASE_PASS
+
+			#include "My Lighting.cginc"
+
+			ENDCG
+		}
+
+		Pass {
+			
+
+			Blend One One
+			ZWrite Off
+
+			CGPROGRAM
+
+			#pragma target 3.0
+
+			#pragma shader_feature _METALLIC_MAP
+			#pragma shader_feature _ _SMOOTHNESS_ALBEDO _SMOOTHNESS_METALLIC
+
+			#pragma multi_compile_fwdadd_fullshadows
+
+			#pragma vertex MyVertexProgram
+			#pragma fragment MyFragmentProgram
+
+			#include "My Lighting.cginc"
+
+			ENDCG
+		}
+
+		Pass{
+
+			Tags{
+				"lightMode" = "ShadowCaster"
+			}
+
+			CGPROGRAM
+
+			#pragma target 3.0
+
+			#pragma multi_compile_shadowcaster
+
+			#pragma vertex MyShadowVertexProgram
+			#pragma fragment MyShadowFragmentProgram
+
+			#include "My Shadows.cginc"
+
+			ENDCG
+		}
+	}
 }
