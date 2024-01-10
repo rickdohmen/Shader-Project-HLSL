@@ -1,158 +1,200 @@
+﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine;
-public class MyLightingShaderGUI : ShaderGUI
-{
 
-    enum SmoothnessSource
-    {
-        Uniform, Albedo, Metallic
-    }
+public class MyLightingShaderGUI : ShaderGUI {
 
-    static GUIContent staticLabel = new GUIContent();
+	enum SmoothnessSource {
+		Uniform, Albedo, Metallic
+	}
 
-    Material target;
-    MaterialEditor editor;
-    MaterialProperty[] properties;
+	static GUIContent staticLabel = new GUIContent();
 
-    public override void OnGUI(
-        MaterialEditor editor, MaterialProperty[] properties
-    )
-    {
-        this.target = editor.target as Material;
-        this.editor = editor;
-        this.properties = properties;
-        DoMain();
-        DoSecondary();
-    }
+	static ColorPickerHDRConfig emissionConfig =
+		new ColorPickerHDRConfig(0f, 99f, 1f / 99f, 3f);
 
-    void DoMain()
-    {
-        GUILayout.Label("Main Maps", EditorStyles.boldLabel);
+	Material target;
+	MaterialEditor editor;
+	MaterialProperty[] properties;
 
-        MaterialProperty mainTex = FindProperty("_MainTex");
-        editor.TexturePropertySingleLine(
-            MakeLabel(mainTex, "Albedo (RGB)"), mainTex, FindProperty("_Tint")
-        );
-        DoMetallic();
-        DoSmoothness();
-        DoNormals();
-        editor.TextureScaleOffsetProperty(mainTex);
-    }
+	public override void OnGUI (
+		MaterialEditor editor, MaterialProperty[] properties
+	) {
+		this.target = editor.target as Material;
+		this.editor = editor;
+		this.properties = properties;
+		DoMain();
+		DoSecondary();
+	}
 
-    void DoNormals()
-    {
-        MaterialProperty map = FindProperty("_NormalMap");
-        editor.TexturePropertySingleLine(
-            MakeLabel(map), map,
-            map.textureValue ? FindProperty("_BumpScale") : null
-        );
-    }
+	void DoMain () {
+		GUILayout.Label("Main Maps", EditorStyles.boldLabel);
 
-    void DoMetallic()
-    {
-        MaterialProperty map = FindProperty("_MetallicMap");
-        EditorGUI.BeginChangeCheck();
-        editor.TexturePropertySingleLine(
-            MakeLabel(map, "Metallic (R)"), map,
-            map.textureValue ? null : FindProperty("_Metallic")
-        );
-        if (EditorGUI.EndChangeCheck())
-        {
-            SetKeyword("_METALLIC_MAP", map.textureValue);
-        }
-    }
+		MaterialProperty mainTex = FindProperty("_MainTex");
+		editor.TexturePropertySingleLine(
+			MakeLabel(mainTex, "Albedo (RGB)"), mainTex, FindProperty("_Tint")
+		);
+		DoMetallic();
+		DoSmoothness();
+		DoNormals();
+		DoOcclusion();
+		DoEmission();
+		DoDetailMask();
+		editor.TextureScaleOffsetProperty(mainTex);
+	}
 
-    void DoSmoothness()
-    {
-        SmoothnessSource source = SmoothnessSource.Uniform;
-        if (IsKeywordEnabled("_SMOOTHNESS_ALBEDO"))
-        {
-            source = SmoothnessSource.Albedo;
-        }
-        else if (IsKeywordEnabled("_SMOOTHNESS_METALLIC"))
-        {
-            source = SmoothnessSource.Metallic;
-        }
-        MaterialProperty slider = FindProperty("_Smoothness");
-        EditorGUI.indentLevel += 2;
-        editor.ShaderProperty(slider, MakeLabel(slider));
-        EditorGUI.indentLevel += 1;
-        EditorGUI.BeginChangeCheck();
-        source = (SmoothnessSource)EditorGUILayout.EnumPopup(
-            MakeLabel("Source"), source
-        );
-        if (EditorGUI.EndChangeCheck())
-        {
-            RecordAction("Smoothness Source");
-            SetKeyword("_SMOOTHNESS_ALBEDO", source == SmoothnessSource.Albedo);
-            SetKeyword(
-                "_SMOOTHNESS_METALLIC", source == SmoothnessSource.Metallic
-            );
-        }
-        EditorGUI.indentLevel -= 3;
-    }
+	void DoNormals () {
+		MaterialProperty map = FindProperty("_NormalMap");
+		Texture tex = map.textureValue;
+		EditorGUI.BeginChangeCheck();
+		editor.TexturePropertySingleLine(
+			MakeLabel(map), map,
+			tex ? FindProperty("_BumpScale") : null
+		);
+		if (EditorGUI.EndChangeCheck() && tex != map.textureValue) {
+			SetKeyword("_NORMAL_MAP", map.textureValue);
+		}
+	}
 
-    void DoSecondary()
-    {
-        GUILayout.Label("Secondary Maps", EditorStyles.boldLabel);
+	void DoMetallic () {
+		MaterialProperty map = FindProperty("_MetallicMap");
+		Texture tex = map.textureValue;
+		EditorGUI.BeginChangeCheck();
+		editor.TexturePropertySingleLine(
+			MakeLabel(map, "Metallic (R)"), map,
+			tex ? null : FindProperty("_Metallic")
+		);
+		if (EditorGUI.EndChangeCheck() && tex != map.textureValue) {
+			SetKeyword("_METALLIC_MAP", map.textureValue);
+		}
+	}
 
-        MaterialProperty detailTex = FindProperty("_DetailTex");
-        editor.TexturePropertySingleLine(
-            MakeLabel(detailTex, "Albedo (RGB) multiplied by 2"), detailTex
-        );
-        DoSecondaryNormals();
-        editor.TextureScaleOffsetProperty(detailTex);
-    }
+	void DoSmoothness () {
+		SmoothnessSource source = SmoothnessSource.Uniform;
+		if (IsKeywordEnabled("_SMOOTHNESS_ALBEDO")) {
+			source = SmoothnessSource.Albedo;
+		}
+		else if (IsKeywordEnabled("_SMOOTHNESS_METALLIC")) {
+			source = SmoothnessSource.Metallic;
+		}
+		MaterialProperty slider = FindProperty("_Smoothness");
+		EditorGUI.indentLevel += 2;
+		editor.ShaderProperty(slider, MakeLabel(slider));
+		EditorGUI.indentLevel += 1;
+		EditorGUI.BeginChangeCheck();
+		source = (SmoothnessSource)EditorGUILayout.EnumPopup(
+			MakeLabel("Source"), source
+		);
+		if (EditorGUI.EndChangeCheck()) {
+			RecordAction("Smoothness Source");
+			SetKeyword("_SMOOTHNESS_ALBEDO", source == SmoothnessSource.Albedo);
+			SetKeyword(
+				"_SMOOTHNESS_METALLIC", source == SmoothnessSource.Metallic
+			);
+		}
+		EditorGUI.indentLevel -= 3;
+	}
 
-    void DoSecondaryNormals()
-    {
-        MaterialProperty map = FindProperty("_DetailNormalMap");
-        editor.TexturePropertySingleLine(
-            MakeLabel(map), map,
-            map.textureValue ? FindProperty("_DetailBumpScale") : null
-        );
-    }
+	void DoOcclusion () {
+		MaterialProperty map = FindProperty("_OcclusionMap");
+		Texture tex = map.textureValue;
+		EditorGUI.BeginChangeCheck();
+		editor.TexturePropertySingleLine(
+			MakeLabel(map, "Occlusion (G)"), map,
+			tex ? FindProperty("_OcclusionStrength") : null
+		);
+		if (EditorGUI.EndChangeCheck() && tex != map.textureValue) {
+			SetKeyword("_OCCLUSION_MAP", map.textureValue);
+		}
+	}
 
-    MaterialProperty FindProperty(string name)
-    {
-        return FindProperty(name, properties);
-    }
+	void DoEmission () {
+		MaterialProperty map = FindProperty("_EmissionMap");
+		Texture tex = map.textureValue;
+		EditorGUI.BeginChangeCheck();
+		editor.TexturePropertyWithHDRColor(
+			MakeLabel(map, "Emission (RGB)"), map, FindProperty("_Emission"),
+			emissionConfig, false
+		);
+		if (EditorGUI.EndChangeCheck() && tex != map.textureValue) {
+			SetKeyword("_EMISSION_MAP", map.textureValue);
+		}
+	}
 
-    static GUIContent MakeLabel(string text, string tooltip = null)
-    {
-        staticLabel.text = text;
-        staticLabel.tooltip = tooltip;
-        return staticLabel;
-    }
+	void DoDetailMask () {
+		MaterialProperty mask = FindProperty("_DetailMask");
+		EditorGUI.BeginChangeCheck();
+		editor.TexturePropertySingleLine(
+			MakeLabel(mask, "Detail Mask (A)"), mask
+		);
+		if (EditorGUI.EndChangeCheck()) {
+			SetKeyword("_DETAIL_MASK", mask.textureValue);
+		}
+	}
 
-    static GUIContent MakeLabel(
-        MaterialProperty property, string tooltip = null
-    )
-    {
-        staticLabel.text = property.displayName;
-        staticLabel.tooltip = tooltip;
-        return staticLabel;
-    }
+	void DoSecondary () {
+		GUILayout.Label("Secondary Maps", EditorStyles.boldLabel);
 
-    void SetKeyword(string keyword, bool state)
-    {
-        if (state)
-        {
-            target.EnableKeyword(keyword);
-        }
-        else
-        {
-            target.DisableKeyword(keyword);
-        }
-    }
+		MaterialProperty detailTex = FindProperty("_DetailTex");
+		EditorGUI.BeginChangeCheck();
+		editor.TexturePropertySingleLine(
+			MakeLabel(detailTex, "Albedo (RGB) multiplied by 2"), detailTex
+		);
+		if (EditorGUI.EndChangeCheck()) {
+			SetKeyword("_DETAIL_ALBEDO_MAP", detailTex.textureValue);
+		}
+		DoSecondaryNormals();
+		editor.TextureScaleOffsetProperty(detailTex);
+	}
 
-    bool IsKeywordEnabled(string keyword)
-    {
-        return target.IsKeywordEnabled(keyword);
-    }
+	void DoSecondaryNormals () {
+		MaterialProperty map = FindProperty("_DetailNormalMap");
+		Texture tex = map.textureValue;
+		EditorGUI.BeginChangeCheck();
+		editor.TexturePropertySingleLine(
+			MakeLabel(map), map,
+			tex ? FindProperty("_DetailBumpScale") : null
+		);
+		if (EditorGUI.EndChangeCheck() && tex != map.textureValue) {
+			SetKeyword("_DETAIL_NORMAL_MAP", map.textureValue);
+		}
+	}
 
-    void RecordAction(string label)
-    {
-        editor.RegisterPropertyChangeUndo(label);
-    }
+	MaterialProperty FindProperty (string name) {
+		return FindProperty(name, properties);
+	}
+
+	static GUIContent MakeLabel (string text, string tooltip = null) {
+		staticLabel.text = text;
+		staticLabel.tooltip = tooltip;
+		return staticLabel;
+	}
+
+	static GUIContent MakeLabel (
+		MaterialProperty property, string tooltip = null
+	) {
+		staticLabel.text = property.displayName;
+		staticLabel.tooltip = tooltip;
+		return staticLabel;
+	}
+
+	void SetKeyword (string keyword, bool state) {
+		if (state) {
+			foreach (Material m in editor.targets) {
+				m.EnableKeyword(keyword);
+			}
+		}
+		else {
+			foreach (Material m in editor.targets) {
+				m.DisableKeyword(keyword);
+			}
+		}
+	}
+
+	bool IsKeywordEnabled (string keyword) {
+		return target.IsKeywordEnabled(keyword);
+	}
+
+	void RecordAction (string label) {
+		editor.RegisterPropertyChangeUndo(label);
+	}
 }
