@@ -374,6 +374,7 @@
 "Assets/Scripts/Bloom/BloomEffect.cs"
 "Assets/Scripts/CustomMaterialGUI/MyLightingShaderGUI.cs"
 "Assets/Scripts/DeferredFogEffect.cs"
+"Assets/Scripts/DepthOfFieldEffect.cs"
 "Assets/Scripts/EmissiveOscillator.cs"
 "Assets/Scripts/GPUInstancingTest.cs"
 "Assets/Scripts/Matricevisualization/CameraTransform.cs"
