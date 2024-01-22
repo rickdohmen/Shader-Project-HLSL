@@ -19,17 +19,29 @@ public class DepthOfFieldEffect : MonoBehaviour {
 	[Range(1f, 10f)]
 	public float bokehRadius = 4f;
 
-	[HideInInspector]
+	
 	public Shader dofShader;
 
 	[NonSerialized]
 	Material dofMaterial;
+    private RenderTexture destination;
+    private RenderTexture source;
 
-	void OnRenderImage (RenderTexture source, RenderTexture destination) {
+    public struct DofSettings
+	{
+        [Range(1, 100)] public float focusDistance;
+        [Range(1, 100)] public float focusRange;
+        [Range(1f, 20f)] public float bokehRadius;
+    }
+
+	private void FixedUpdate() 
+	{
 		if (dofMaterial == null) {
 			dofMaterial = new Material(dofShader);
 			dofMaterial.hideFlags = HideFlags.HideAndDontSave;
 		}
+
+		Debug.Log("OnRenderImage");
 
 		dofMaterial.SetFloat("_BokehRadius", bokehRadius);
 		dofMaterial.SetFloat("_FocusDistance", focusDistance);

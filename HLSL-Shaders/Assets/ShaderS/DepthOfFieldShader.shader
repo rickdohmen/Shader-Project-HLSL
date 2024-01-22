@@ -7,9 +7,13 @@
 		#include "UnityCG.cginc"
 
 		sampler2D _MainTex, _CameraDepthTexture, _CoCTex, _DoFTex;
-		float4 _MainTex_TexelSize;
 
-		float _BokehRadius, _FocusDistance, _FocusRange;
+		CBUFFER_START(MyConstantBuffer)
+			
+			float4 _MainTex_TexelSize;
+	
+			float _BokehRadius, _FocusDistance, _FocusRange;
+		CBUFFER_END
 
 		struct VertexData {
 			float4 vertex : POSITION;
