@@ -1536,10 +1536,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f0e75e9ee3d745b2904eaf835639851, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  focusDistance: 100
-  focusRange: 9.51
-  bokehRadius: 4.64
+  focusDistance: 124
+  focusRange: 218
+  bokehRadius: 16
+  visualizeFocus: 0
+  source: {fileID: 8600000, guid: 510609d04cc52e5409a3d11bda8d7471, type: 2}
+  destination: {fileID: 8400000, guid: be9ab62f61240c24d978b571219001d2, type: 2}
   dofShader: {fileID: 4800000, guid: bd8440d6914d749a58271b1a79edc668, type: 3}
+  dofMaterial: {fileID: 0}
 --- !u!81 &1375905523
 AudioListener:
   m_ObjectHideFlags: 0

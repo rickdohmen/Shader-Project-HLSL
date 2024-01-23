@@ -1,5 +1,7 @@
-﻿Shader "Hidden/DepthOfField" {
-	Properties {
+﻿Shader "Hidden/DepthOfField" 
+{
+	Properties 
+	{
 		_MainTex ("Texture", 2D) = "white" {}
 	}
 
@@ -8,24 +10,27 @@
 
 		sampler2D _MainTex, _CameraDepthTexture, _CoCTex, _DoFTex;
 
-		CBUFFER_START(MyConstantBuffer)
+		
 			
-			float4 _MainTex_TexelSize;
+		float4 _MainTex_TexelSize;
 	
-			float _BokehRadius, _FocusDistance, _FocusRange;
-		CBUFFER_END
+		float _BokehRadius, _FocusDistance, _FocusRange;
+		
 
-		struct VertexData {
+		struct VertexData 
+		{
 			float4 vertex : POSITION;
 			float2 uv : TEXCOORD0;
 		};
 
-		struct Interpolators {
+		struct Interpolators 
+		{
 			float4 pos : SV_POSITION;
 			float2 uv : TEXCOORD0;
 		};
 
-		Interpolators VertexProgram (VertexData v) {
+		Interpolators VertexProgram (VertexData v) 
+		{
 			Interpolators i;
 			i.pos = UnityObjectToClipPos(v.vertex);
 			i.uv = v.uv;
@@ -34,17 +39,20 @@
 
 	ENDCG
 
-	SubShader {
+	SubShader 
+	{
 		Cull Off
 		ZTest Always
 		ZWrite Off
 
-		Pass { // 0 circleOfConfusionPass
+		Pass 
+		{ // 0 circleOfConfusionPass
 			CGPROGRAM
 				#pragma vertex VertexProgram
 				#pragma fragment FragmentProgram
 
-				half FragmentProgram (Interpolators i) : SV_Target {
+				half FragmentProgram (Interpolators i) : SV_Target 
+				{
 					float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
 					depth = LinearEyeDepth(depth);
 
@@ -55,16 +63,19 @@
 			ENDCG
 		}
 
-		Pass { // 1 preFilterPass
+		Pass 
+		{ // 1 preFilterPass
 			CGPROGRAM
 				#pragma vertex VertexProgram
 				#pragma fragment FragmentProgram
 
-				half Weigh (half3 c) {
+				half Weigh (half3 c) 
+				{
 					return 1 / (1 + max(max(c.r, c.g), c.b));
 				}
 
-				half4 FragmentProgram (Interpolators i) : SV_Target {
+				half4 FragmentProgram (Interpolators i) : SV_Target 
+				{
 					float4 o = _MainTex_TexelSize.xyxy * float2(-0.5, 0.5).xxyy;
 
 					half3 s0 = tex2D(_MainTex, i.uv + o.xy).rgb;
@@ -94,7 +105,8 @@
 			ENDCG
 		}
 
-		Pass { // 2 bokehPass
+		Pass 
+		{ // 2 bokehPass
 			CGPROGRAM
 				#pragma vertex VertexProgram
 				#pragma fragment FragmentProgram
@@ -151,16 +163,19 @@
 					};
 				#endif
 
-				half Weigh (half coc, half radius) {
+				half Weigh (half coc, half radius) 
+				{
 					return saturate((coc - radius + 2) / 2);
 				}
 
-				half4 FragmentProgram (Interpolators i) : SV_Target {
+				half4 FragmentProgram (Interpolators i) : SV_Target 
+				{
 					half coc = tex2D(_MainTex, i.uv).a;
 					
 					half3 bgColor = 0, fgColor = 0;
 					half bgWeight = 0, fgWeight = 0;
-					for (int k = 0; k < kernelSampleCount; k++) {
+					for (int k = 0; k < kernelSampleCount; k++) 
+					{
 						float2 o = kernel[k] * _BokehRadius;
 						half radius = length(o);
 						o *= _MainTex_TexelSize.xy;
@@ -184,7 +199,8 @@
 			ENDCG
 		}
 
-		Pass { // 3 postFilterPass
+		Pass 
+		{ // 3 postFilterPass
 			CGPROGRAM
 				#pragma vertex VertexProgram
 				#pragma fragment FragmentProgram
@@ -201,12 +217,14 @@
 			ENDCG
 		}
 
-		Pass { // 4 combinePass
+		Pass 
+		{ // 4 combinePass
 			CGPROGRAM
 				#pragma vertex VertexProgram
 				#pragma fragment FragmentProgram
 
-				half4 FragmentProgram (Interpolators i) : SV_Target {
+				half4 FragmentProgram (Interpolators i) : SV_Target 
+				{
 					half4 source = tex2D(_MainTex, i.uv);
 					half coc = tex2D(_CoCTex, i.uv).r;
 					half4 dof = tex2D(_DoFTex, i.uv);

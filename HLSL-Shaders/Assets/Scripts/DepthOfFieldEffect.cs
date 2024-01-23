@@ -4,28 +4,30 @@ using System;
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class DepthOfFieldEffect : MonoBehaviour {
 
-	const int circleOfConfusionPass = 0;
-	const int preFilterPass = 1;
-	const int bokehPass = 2;
-	const int postFilterPass = 3;
-	const int combinePass = 4;
+    [Range(0.1f, 200f)]
+    public float focusDistance = 10f;
 
-	[Range(0.1f, 100f)]
-	public float focusDistance = 10f;
+    [Range(0.1f, 500f)]
+    public float focusRange = 3f;
 
-	[Range(0.1f, 10f)]
-	public float focusRange = 3f;
+    [Range(1f, 20f)]
+    public float bokehRadius = 4f;
 
-	[Range(1f, 10f)]
-	public float bokehRadius = 4f;
+    public bool visualizeFocus;
 
-	
-	public Shader dofShader;
+    [SerializeField] private RenderTexture source;
+    [SerializeField] private RenderTexture destination;
 
-	[NonSerialized]
-	Material dofMaterial;
-    private RenderTexture destination;
-    private RenderTexture source;
+
+    [HideInInspector] public Shader dofShader;
+
+    [SerializeField] private Material dofMaterial;
+
+    const int circleOfCofusionPass = 0;
+    const int preFilterPass = 1;
+    const int bokehPass = 2;
+    const int postFilerPass = 3;
+    const int combinePass = 4;
 
     public struct DofSettings
 	{
@@ -34,14 +36,33 @@ public class DepthOfFieldEffect : MonoBehaviour {
         [Range(1f, 20f)] public float bokehRadius;
     }
 
-	private void FixedUpdate() 
+    private void OnEnable()
+    {
+        if (dofShader == null)
+        {
+            dofShader = Shader.Find("Hidden/DepthOfField");
+        }
+
+        if (dofShader == null)
+        {
+            Debug.LogError("Depth of Field shader not found. Please assign it in the inspector.");
+            enabled = false;
+        }
+        else
+        {
+            dofMaterial = new Material(dofShader); // Move the material creation to OnEnable
+            dofMaterial.hideFlags = HideFlags.HideAndDontSave;
+        }
+    }
+
+    private void FixedUpdate() 
 	{
 		if (dofMaterial == null) {
 			dofMaterial = new Material(dofShader);
 			dofMaterial.hideFlags = HideFlags.HideAndDontSave;
 		}
 
-		Debug.Log("OnRenderImage");
+		
 
 		dofMaterial.SetFloat("_BokehRadius", bokehRadius);
 		dofMaterial.SetFloat("_FocusDistance", focusDistance);
@@ -61,10 +82,10 @@ public class DepthOfFieldEffect : MonoBehaviour {
 		dofMaterial.SetTexture("_CoCTex", coc);
 		dofMaterial.SetTexture("_DoFTex", dof0);
 
-		Graphics.Blit(source, coc, dofMaterial, circleOfConfusionPass);
+		Graphics.Blit(source, coc, dofMaterial, circleOfCofusionPass);
 		Graphics.Blit(source, dof0, dofMaterial, preFilterPass);
 		Graphics.Blit(dof0, dof1, dofMaterial, bokehPass);
-		Graphics.Blit(dof1, dof0, dofMaterial, postFilterPass);
+		Graphics.Blit(dof1, dof0, dofMaterial, postFilerPass);
 		Graphics.Blit(source, destination, dofMaterial, combinePass);
 
 		RenderTexture.ReleaseTemporary(coc);
